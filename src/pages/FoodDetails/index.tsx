@@ -133,15 +133,34 @@ const FoodDetails: React.FC = () => {
   }
 
   const toggleFavorite = useCallback(() => {
-    // Toggle if food is favorite or not
+    api.post('favorites', food);
+
+    setIsFavorite(!isFavorite);
   }, [isFavorite, food]);
 
   const cartTotal = useMemo(() => {
-    // Calculate cartTotal
+    const singlePrice =
+      Number(food.price) + // Vem da API como string
+      extras.reduce(
+        (previous, current) => previous + current.value * current.quantity,
+        0,
+      );
+
+    return formatValue(singlePrice * foodQuantity);
   }, [extras, food, foodQuantity]);
 
   async function handleFinishOrder(): Promise<void> {
-    // Finish the order and save on the API
+    const order = {
+      product_id: food.id,
+      name: food.name,
+      description: food.description,
+      price: food.price,
+      formattedPrice: food.formattedPrice,
+      image_url: food.image_url,
+      extras: extras.filter(extra => extra.quantity !== 0),
+    };
+
+    await api.post('orders', order);
   }
 
   // Calculate the correct icon name
