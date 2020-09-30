@@ -22,7 +22,8 @@ const Home: React.FC = () => {
 
   async function handleNavigate(): Promise<void> {
     navigation.navigate('MainBottom', {
-      screen: 'Dashboard',
+      screen: 'Dashboard', // Se passar um name que não existe cai na primeira tela (Dashboard), ela fica como default
+      // O name correto é "DashboardStack"
     });
   }
 
